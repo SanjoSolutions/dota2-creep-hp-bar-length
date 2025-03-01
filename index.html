@@ -56,6 +56,15 @@
         width: 333px;
         height: 190px;
       }
+
+      .side-by-side {
+        display: flex;
+        flex-direction: rows;
+      }
+
+      .parameters {
+        margin-right: 1rem;
+      }
     </style>
   </head>
   <body>
@@ -63,42 +72,56 @@
 
     Last updated for patch 7.38.
 
-    <h2>Parameters</h2>
+    <div class="side-by-side">
+      <div class="parameters">
+        <h2>Parameters</h2>
 
-    <label style="display: block; margin-bottom: 0.5rem"
-      >Minimum last hit damage<br />
-      <input type="number" value="60" id="minimum-damage"
-    /></label>
+        <label style="display: block; margin-bottom: 0.5rem"
+          >Minimum last hit damage<br />
+          <input type="number" value="60" id="minimum-damage"
+        /></label>
 
-    <label style="display: block; margin-bottom: 0.5rem">
-      Damage type<br />
-      <select id="damage-type">
-        <option value="physical">Physical</option>
-        <option value="magical">Magical</option>
-      </select>
-    </label>
+        <label style="display: block; margin-bottom: 0.5rem">
+          Damage type<br />
+          <select id="damage-type">
+            <option value="physical">Physical</option>
+            <option value="magical">Magical</option>
+          </select>
+        </label>
 
-    <label style="display: block">
-      Creep side<br />
-      <select id="creep-side">
-        <option value="other-team">Other team</option>
-        <option value="your-team">Your team</option>
-      </select>
-    </label>
-
-    <h2>Melee creep</h2>
-
-    <div class="background">
-      <div id="melee-hp-bar" class="hp-bar hp-bar--other-team-creep">
-        <div id="melee-hp-bar-filled" class="hp-bar-filled"></div>
+        <label style="display: block">
+          Creep side<br />
+          <select id="creep-side">
+            <option value="other-team">Other team</option>
+            <option value="your-team">Your team</option>
+          </select>
+        </label>
       </div>
-    </div>
 
-    <h2>Ranged creep</h2>
+      <div class="bars">
+        <h2>Melee creep</h2>
 
-    <div class="background">
-      <div id="ranged-hp-bar" class="hp-bar hp-bar--other-team-creep">
-        <div id="ranged-hp-bar-filled" class="hp-bar-filled"></div>
+        <div class="background">
+          <div id="melee-hp-bar" class="hp-bar hp-bar--other-team-creep">
+            <div id="melee-hp-bar-filled" class="hp-bar-filled"></div>
+          </div>
+        </div>
+
+        <h2>Ranged creep</h2>
+
+        <div class="background">
+          <div id="ranged-hp-bar" class="hp-bar hp-bar--other-team-creep">
+            <div id="ranged-hp-bar-filled" class="hp-bar-filled"></div>
+          </div>
+        </div>
+
+        <h2>Siege creep</h2>
+
+        <div class="background">
+          <div id="siege-hp-bar" class="hp-bar hp-bar--other-team-creep">
+            <div id="siege-hp-bar-filled" class="hp-bar-filled"></div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -134,9 +157,23 @@
           ).style.width = `${width}px`
         }
 
+        function updateSiegeCreepBar() {
+          const minimumDamage = parseInt($minimumDamage.value, 10)
+          const damageType = $damageType.value
+
+          const effectiveMinimumDamage = (1 - 0.5) * minimumDamage
+          const width = Math.round(
+            Math.min(1, effectiveMinimumDamage / 935) * 78
+          )
+          document.querySelector(
+            '#siege-hp-bar-filled'
+          ).style.width = `${width}px`
+        }
+
         function updateBars() {
           updateMeleeCreepBar()
           updateRangedCreepBar()
+          updateSiegeCreepBar()
         }
 
         $minimumDamage.addEventListener('input', updateBars)
@@ -147,6 +184,9 @@
           ).className = `hp-bar hp-bar--${$creepSide.value}-creep`
           document.querySelector(
             '#ranged-hp-bar'
+          ).className = `hp-bar hp-bar--${$creepSide.value}-creep`
+          document.querySelector(
+            '#siege-hp-bar'
           ).className = `hp-bar hp-bar--${$creepSide.value}-creep`
         })
 
