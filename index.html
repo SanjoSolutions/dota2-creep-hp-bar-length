@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Creep last hit bar length visualizer for Dota 2</title>
+    <style>
+      .hp-bar {
+        box-sizing: border-box;
+        width: 80px;
+        height: 7px;
+        background-color: #0c1f06;
+        border: 1px solid #051103;
+      }
+
+      .hp-bar-filled {
+        box-sizing: border-box;
+        height: 5px;
+        background: linear-gradient(
+          to bottom,
+          #559a3d 0%,
+          #559a3d 40%,
+          #50923a 40%,
+          #50923a 100%
+        );
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Creep last hit bar length visualizer for Dota 2</h1>
+
+    Last updated for patch 7.38.
+
+    <h2>Parameters</h2>
+
+    <label style="display: block; margin-bottom: 0.5rem"
+      >Minimum last hit damage<br />
+      <input type="number" value="60" id="minimum-damage"
+    /></label>
+
+    <label style="display: block">
+      Damage type<br />
+      <select id="damage-type">
+        <option value="physical">Physical</option>
+        <option value="magical">Magical</option>
+      </select>
+    </label>
+
+    <h2>Melee creep</h2>
+
+    <div class="hp-bar">
+      <div id="melee-hp-bar-filled" class="hp-bar-filled"></div>
+    </div>
+
+    <h2>Ranged creep</h2>
+
+    <div class="hp-bar">
+      <div id="ranged-hp-bar-filled" class="hp-bar-filled"></div>
+    </div>
+
+    <script>
+      {
+        const $minimumDamage = document.querySelector('#minimum-damage')
+        const $damageType = document.querySelector('#damage-type')
+
+        function updateMeleeCreepBar() {
+          const minimumDamage = parseInt($minimumDamage.value, 10)
+          const damageType = $damageType.value
+
+          const effectiveMinimumDamage =
+            ($damageType === 'physical' ? 1 - 0.11 : 1) * minimumDamage
+          const width = Math.round(
+            Math.min(1, effectiveMinimumDamage / 550) * 78
+          )
+          document.querySelector(
+            '#melee-hp-bar-filled'
+          ).style.width = `${width}px`
+        }
+
+        function updateRangedCreepBar() {
+          const minimumDamage = parseInt($minimumDamage.value, 10)
+
+          const effectiveMinimumDamage = minimumDamage
+          const width = Math.round(
+            Math.min(1, effectiveMinimumDamage / 300) * 78
+          )
+          document.querySelector(
+            '#ranged-hp-bar-filled'
+          ).style.width = `${width}px`
+        }
+
+        function updateBars() {
+          updateMeleeCreepBar()
+          updateRangedCreepBar()
+        }
+
+        $minimumDamage.addEventListener('input', updateBars)
+        $damageType.addEventListener('input', updateBars)
+
+        updateBars()
+      }
+    </script>
+  </body>
+</html>
