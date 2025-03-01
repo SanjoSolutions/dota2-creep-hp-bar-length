@@ -9,19 +9,42 @@
         box-sizing: border-box;
         width: 80px;
         height: 7px;
-        background-color: #0c1f06;
-        border: 1px solid #051103;
+        background-color: gray;
+        border: 1px solid black;
       }
 
       .hp-bar-filled {
         box-sizing: border-box;
         height: 5px;
+      }
+
+      .hp-bar--other-team-creep {
+        background-color: #1c0b06;
+        border: 1px solid #000000;
+      }
+
+      .hp-bar--other-team-creep .hp-bar-filled {
         background: linear-gradient(
           to bottom,
-          #559a3d 0%,
-          #559a3d 40%,
-          #50923a 40%,
-          #50923a 100%
+          #75402f 0%,
+          #75402f 40%,
+          #5f3425 40%,
+          #5f3425 100%
+        );
+      }
+
+      .hp-bar--your-team-creep {
+        background-color: #0c1f06;
+        border: 1px solid #051103;
+      }
+
+      .hp-bar--your-team-creep .hp-bar-filled {
+        background: linear-gradient(
+          to bottom,
+          #4b8836 0%,
+          #4b8836 40%,
+          #3e712c 40%,
+          #3e712c 100%
         );
       }
 
@@ -47,7 +70,7 @@
       <input type="number" value="60" id="minimum-damage"
     /></label>
 
-    <label style="display: block">
+    <label style="display: block; margin-bottom: 0.5rem">
       Damage type<br />
       <select id="damage-type">
         <option value="physical">Physical</option>
@@ -55,10 +78,18 @@
       </select>
     </label>
 
+    <label style="display: block">
+      Creep side<br />
+      <select id="creep-side">
+        <option value="other-team">Other team</option>
+        <option value="your-team">Your team</option>
+      </select>
+    </label>
+
     <h2>Melee creep</h2>
 
     <div class="background">
-      <div class="hp-bar">
+      <div id="melee-hp-bar" class="hp-bar hp-bar--other-team-creep">
         <div id="melee-hp-bar-filled" class="hp-bar-filled"></div>
       </div>
     </div>
@@ -66,7 +97,7 @@
     <h2>Ranged creep</h2>
 
     <div class="background">
-      <div class="hp-bar">
+      <div id="ranged-hp-bar" class="hp-bar hp-bar--other-team-creep">
         <div id="ranged-hp-bar-filled" class="hp-bar-filled"></div>
       </div>
     </div>
@@ -75,6 +106,7 @@
       {
         const $minimumDamage = document.querySelector('#minimum-damage')
         const $damageType = document.querySelector('#damage-type')
+        const $creepSide = document.querySelector('#creep-side')
 
         function updateMeleeCreepBar() {
           const minimumDamage = parseInt($minimumDamage.value, 10)
@@ -108,7 +140,15 @@
         }
 
         $minimumDamage.addEventListener('input', updateBars)
-        $damageType.addEventListener('input', updateBars)
+        $damageType.addEventListener('change', updateBars)
+        $creepSide.addEventListener('change', function () {
+          document.querySelector(
+            '#melee-hp-bar'
+          ).className = `hp-bar hp-bar--${$creepSide.value}-creep`
+          document.querySelector(
+            '#ranged-hp-bar'
+          ).className = `hp-bar hp-bar--${$creepSide.value}-creep`
+        })
 
         updateBars()
       }
