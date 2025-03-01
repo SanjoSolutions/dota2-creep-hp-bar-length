@@ -89,13 +89,31 @@
           </select>
         </label>
 
-        <label style="display: block">
+        <label style="display: block; margin-bottom: 0.5rem">
           Creep side<br />
           <select id="creep-side">
             <option value="other-team">Other team</option>
             <option value="your-team">Your team</option>
           </select>
         </label>
+
+        <label style="display: block">
+          Game time<br />
+          <input
+            id="game-time-minutes"
+            type="number"
+            value="0"
+            style="width: 2rem" />:
+          <input
+            id="game-time-seconds"
+            type="number"
+            value="0"
+            style="width: 2rem"
+        /></label>
+
+        <span id="game-time-creep-upgrades-info"
+          >Creeps have been upgraded 0 times at this game time.</span
+        >
       </div>
 
       <div class="bars">
@@ -137,8 +155,9 @@
 
           const effectiveMinimumDamage =
             ($damageType.value === 'physical' ? 1 - 0.11 : 1) * minimumDamage
+          const maxHP = 550 + determineNumberOfCreepUpgrades() * 12
           const width = Math.round(
-            Math.min(1, effectiveMinimumDamage / 550) * 78
+            Math.min(1, effectiveMinimumDamage / maxHP) * 78
           )
           document.querySelector(
             '#melee-hp-bar-filled'
@@ -149,8 +168,9 @@
           const minimumDamage = parseInt($minimumDamage.value, 10)
 
           const effectiveMinimumDamage = minimumDamage
+          const maxHP = 300 + determineNumberOfCreepUpgrades() * 12
           const width = Math.round(
-            Math.min(1, effectiveMinimumDamage / 300) * 78
+            Math.min(1, effectiveMinimumDamage / maxHP) * 78
           )
           document.querySelector(
             '#ranged-hp-bar-filled'
@@ -189,6 +209,32 @@
             '#siege-hp-bar'
           ).className = `hp-bar hp-bar--${$creepSide.value}-creep`
         })
+
+        const $gameTimeMinutes = document.querySelector('#game-time-minutes')
+        const $gameTimeSeconds = document.querySelector('#game-time-seconds')
+        const $gameTimeCreepUpgradesInfo = document.querySelector(
+          '#game-time-creep-upgrades-info'
+        )
+        $gameTimeMinutes.addEventListener('input', updateInfo)
+        $gameTimeSeconds.addEventListener('input', updateInfo)
+
+        function updateInfo() {
+          updateBars()
+          updateGameTimeCreepUpgradesInfo()
+        }
+
+        function determineNumberOfCreepUpgrades() {
+          const minutes = parseInt($gameTimeMinutes.value, 10)
+          const seconds = parseInt($gameTimeSeconds.value, 10)
+          const gameTime = minutes * 60 + seconds
+          const numberOfCreepUpgrades = Math.floor(gameTime / (7.5 * 60))
+          return numberOfCreepUpgrades
+        }
+
+        function updateGameTimeCreepUpgradesInfo() {
+          const numberOfCreepUpgrades = determineNumberOfCreepUpgrades()
+          $gameTimeCreepUpgradesInfo.textContent = `Creeps have been upgraded ${numberOfCreepUpgrades} times at this game time.`
+        }
 
         updateBars()
       }
