@@ -24,6 +24,15 @@
           #50923a 100%
         );
       }
+
+      .background {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: url('background.png');
+        width: 333px;
+        height: 190px;
+      }
     </style>
   </head>
   <body>
@@ -48,14 +57,18 @@
 
     <h2>Melee creep</h2>
 
-    <div class="hp-bar">
-      <div id="melee-hp-bar-filled" class="hp-bar-filled"></div>
+    <div class="background">
+      <div class="hp-bar">
+        <div id="melee-hp-bar-filled" class="hp-bar-filled"></div>
+      </div>
     </div>
 
     <h2>Ranged creep</h2>
 
-    <div class="hp-bar">
-      <div id="ranged-hp-bar-filled" class="hp-bar-filled"></div>
+    <div class="background">
+      <div class="hp-bar">
+        <div id="ranged-hp-bar-filled" class="hp-bar-filled"></div>
+      </div>
     </div>
 
     <script>
