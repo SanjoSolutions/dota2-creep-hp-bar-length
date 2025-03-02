@@ -148,6 +148,15 @@
         const $minimumDamage = document.querySelector('#minimum-damage')
         const $damageType = document.querySelector('#damage-type')
         const $creepSide = document.querySelector('#creep-side')
+        const $gameTimeMinutes = document.querySelector('#game-time-minutes')
+        const $gameTimeSeconds = document.querySelector('#game-time-seconds')
+        const $gameTimeCreepUpgradesInfo = document.querySelector(
+          '#game-time-creep-upgrades-info'
+        )
+
+        $minimumDamage.addEventListener('wheel', () => {})
+        $gameTimeMinutes.addEventListener('wheel', () => {})
+        $gameTimeSeconds.addEventListener('wheel', () => {})
 
         function updateMeleeCreepBar() {
           const minimumDamage = parseInt($minimumDamage.value, 10)
@@ -210,11 +219,6 @@
           ).className = `hp-bar hp-bar--${$creepSide.value}-creep`
         })
 
-        const $gameTimeMinutes = document.querySelector('#game-time-minutes')
-        const $gameTimeSeconds = document.querySelector('#game-time-seconds')
-        const $gameTimeCreepUpgradesInfo = document.querySelector(
-          '#game-time-creep-upgrades-info'
-        )
         $gameTimeMinutes.addEventListener('input', updateInfo)
         $gameTimeSeconds.addEventListener('input', updateInfo)
 
